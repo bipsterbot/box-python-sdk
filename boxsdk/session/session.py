@@ -200,7 +200,7 @@ class Session(object):
         """
         return self._proxy_config
 
-    def get_url(self, endpoint, *args):
+    def get_url(self, endpoint, *args, **kwargs):
         """
         Return the URL for the given Box API endpoint.
 
@@ -212,12 +212,17 @@ class Session(object):
             Additional parts of the endpoint URL.
         :type args:
             `Iterable`
+        :param kwargs:
+            URL parameters to pass with the URL
+        :type kwargs:
+            `Dictionary iterable`
         :rtype:
             `unicode`
         """
         # pylint:disable=no-self-use
         url = ['{0}/{1}'.format(self._api_config.BASE_API_URL, endpoint)]
         url.extend(['/{0}'.format(x) for x in args])
+        url.extend([f'?{k}={v}' if i == 0 else f'&{k}={v}' for i, (k, v) in enumerate(kwargs.items())])
         return ''.join(url)
 
     def get_constructor_kwargs(self):
